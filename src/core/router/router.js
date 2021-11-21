@@ -4,11 +4,13 @@ export class Router {
   #controller
   #routes
   #root
+  #targetView
 
   constructor(routes, root) {
     this.#routes = routes;
     this.#controller = null;
     this.#root = root;
+    this.#targetView = null;
   }
 
   setController(controller) {
@@ -24,14 +26,25 @@ export class Router {
     };
   }
 
-  #hashChange() {
+  async #hashChange() {
     const routeInfo = this.#getRouteInfo();
     const TargetView = this.#routes[routeInfo.routeName] || FilmsView;
     if (TargetView) {
       this.#root.innerHTML = '';
-      const paramsForRender = this.#controller.getViewParams(routeInfo.routeName);
-      const targetView = new TargetView(this.#root);
-      targetView.render(...paramsForRender);
+      const paramsForRender = await this.#controller.getViewParams(routeInfo.routeName);
+      this.#targetView = new TargetView(this.#root);
+      this.#targetView.setHandleFavoriteButtonClick(
+        this.#controller.handleFavoriteButtonClick.bind(this.#controller),
+      );
+      this.#targetView.render(...paramsForRender);
+    }
+  }
+
+  async updateView() {
+    const routeInfo = this.#getRouteInfo();
+    const paramsForRender = await this.#controller.getViewParams(routeInfo.routeName);
+    if (this.#targetView) {
+      this.#targetView.update(...paramsForRender)
     }
   }
 

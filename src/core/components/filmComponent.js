@@ -3,6 +3,7 @@ import NotInFavoritesImage from '../../assets/icons/heart.png';
 
 export const renderFilmComponent = ({
   filmModel,
+  handleFavoriteButtonClick,
 }) => {
   const container = document.createElement('div');
   container.className = 'film-card';
@@ -30,6 +31,11 @@ export const renderFilmComponent = ({
     actionButtonImg.src = NotInFavoritesImage;
   }
   actionButton.append(actionButtonImg);
+  actionButton.addEventListener('click', async () => {
+    if (handleFavoriteButtonClick) {
+      await handleFavoriteButtonClick(filmModel.getIsFavorite(), filmModel.getId());
+    }
+  });
 
   container.append(titleHTML, imageHTML, yearHTML, actionButton);
 

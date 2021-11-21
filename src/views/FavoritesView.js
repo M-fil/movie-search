@@ -3,9 +3,32 @@ import { Routes } from '../core/constants/routes';
 import { View } from './View';
 
 export class FavoritesView extends View {
+  #filmsContainer
+
   static #Text = {
     Title: 'Your Favorite Films',
     SeeAllFilmsButtonText: 'See All Films',
+  }
+
+  constructor(root) {
+    super(root);
+
+    this.#filmsContainer = null;
+  }
+
+  #renderFilms(favoriteFilmModels) {
+    this.#filmsContainer.innerHTML = '';
+    favoriteFilmModels.forEach((filmModel) => {
+      const filmHTML = renderFilmComponent({
+        filmModel,
+        handleFavoriteButtonClick: this.getHandleFavoriteButtonClick(),
+      });
+      this.#filmsContainer.append(filmHTML);
+    });
+  }
+
+  update(favoriteFilmModels) {
+    this.#renderFilms(favoriteFilmModels)
   }
 
   render(favoriteFilmModels = []) {
@@ -24,14 +47,11 @@ export class FavoritesView extends View {
     allFilmsLink.textContent = FavoritesView.#Text.SeeAllFilmsButtonText;
     linksBlock.append(allFilmsLink);
 
-    const filmsContainer = document.createElement('div');
-    filmsContainer.className = 'film-cards-container';
-    favoriteFilmModels.forEach((filmModel) => {
-      const filmHTML = renderFilmComponent({ filmModel });
-      filmsContainer.append(filmHTML);
-    });
+    this.#filmsContainer = document.createElement('div');
+    this.#filmsContainer.className = 'film-cards-container';
+    this.#renderFilms(favoriteFilmModels)
 
-    container.append(titleHTML, linksBlock, filmsContainer);
+    container.append(titleHTML, linksBlock, this.#filmsContainer);
 
     this.getRoot().append(container);
   }
