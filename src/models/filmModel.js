@@ -1,8 +1,12 @@
 export class FilmModel {
   #poster
+
   #title
+
   #year
+
   #imdbID
+
   #isFavorite
 
   constructor(filmData) {

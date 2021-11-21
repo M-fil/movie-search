@@ -1,7 +1,7 @@
 import { EnvData } from '../constants/envData';
 import { FilmModel } from '../../models/filmModel';
 import { StorageKeys } from '../constants/storageKeys';
-import { getFilmById, removeFilmById } from '../helpers/films';
+import { checkIfInFavorites, getFilmById, removeFilmById } from '../helpers/films';
 
 export class FilmsService {
   static #DefaultSearchValue = 'Marvel';
@@ -12,27 +12,23 @@ export class FilmsService {
   }
 
   static #convertFilmModelToFilm(filmModels = []) {
-    return filmModels.map((filmModel) => {
-      return {
-        Poster: filmModel.getPoster(),
-        Title: filmModel.getTitle(),
-        Year: filmModel.getYear(),
-        imdbID: filmModel.getId(),
-        isFavorite: filmModel.getIsFavorite(),
-      };
-    });
+    return filmModels.map((filmModel) => ({
+      Poster: filmModel.getPoster(),
+      Title: filmModel.getTitle(),
+      Year: filmModel.getYear(),
+      imdbID: filmModel.getId(),
+      isFavorite: filmModel.getIsFavorite(),
+    }));
   }
 
   static #convertFilmsToFilmModel(films) {
-    return films.map((filmData) => {
-      return new FilmModel({
-        Poster: filmData.Poster,
-        Title: filmData.Title,
-        Year: filmData.Year,
-        imdbID: filmData.imdbID,
-        isFavorite: !!filmData.isFavorite,
-      });
-    });
+    return films.map((filmData) => new FilmModel({
+      Poster: filmData.Poster,
+      Title: filmData.Title,
+      Year: filmData.Year,
+      imdbID: filmData.imdbID,
+      isFavorite: !!filmData.isFavorite,
+    }));
   }
 
   static #setFavoriteValuesForFilmModels(allFilms, favoriteFilms) {
@@ -41,7 +37,7 @@ export class FilmsService {
     }
 
     return allFilms.map((filmModel) => {
-      const isFavorite = favoriteFilms.some((favoriteFilmModel) => favoriteFilmModel.getId() === filmModel.getId());
+      const isFavorite = checkIfInFavorites(favoriteFilms, filmModel.getId());
       filmModel.setIsFavorite(isFavorite);
       return filmModel;
     });
@@ -63,7 +59,7 @@ export class FilmsService {
     } catch (error) {
       return {
         error: error.message,
-      }
+      };
     }
   }
 
@@ -98,7 +94,7 @@ export class FilmsService {
     const targetFilm = getFilmById(allFilms, filmId);
     if (targetFilm) {
       targetFilm.setIsFavorite(false);
-      const finalFavoritesFilms = removeFilmById(favorites, targetFilm.getId())
+      const finalFavoritesFilms = removeFilmById(favorites, targetFilm.getId());
       await this.saveFilms(finalFavoritesFilms);
     }
   }

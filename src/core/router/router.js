@@ -1,9 +1,12 @@
-import { FilmsView } from "../../views/FilmsView";
+import { FilmsView } from '../../views/FilmsView';
 
 export class Router {
   #controller
+
   #routes
+
   #root
+
   #targetView
 
   constructor(routes, root) {
@@ -20,7 +23,7 @@ export class Router {
   #getRouteInfo() {
     const { location } = window;
     const { hash } = location;
-    
+
     return {
       routeName: hash.slice(1),
     };
@@ -44,7 +47,7 @@ export class Router {
     const routeInfo = this.#getRouteInfo();
     const paramsForRender = await this.#controller.getViewParams(routeInfo.routeName);
     if (this.#targetView) {
-      this.#targetView.update(...paramsForRender)
+      this.#targetView.update(...paramsForRender);
     }
   }
 

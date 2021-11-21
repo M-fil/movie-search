@@ -1,4 +1,4 @@
-import { Routes } from "../core/constants/routes";
+import { Routes } from '../core/constants/routes';
 
 export class FilmsController {
   #router
@@ -28,7 +28,7 @@ export class FilmsController {
 
   async getViewParams(routeName) {
     let paramsForRender = [];
-    
+
     await this.#fetchAllFilms();
     this.#favoriteFilms = await this.#service.getFavoriteFilms();
 

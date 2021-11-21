@@ -1,7 +1,5 @@
 import { Routes } from '../core/constants/routes';
 import { View } from './View';
-import InFavoritesImage from '../assets/icons/heart-outlined.png';
-import NotInFavoritesImage from '../assets/icons/heart.png';
 import { renderFilmComponent } from '../core/components/filmComponent';
 
 export class FilmsView extends View {
@@ -24,7 +22,7 @@ export class FilmsView extends View {
 
     const seeFavoritesButton = document.createElement('a');
     seeFavoritesButton.href = `#${Routes.Favorites}`;
-    seeFavoritesButton.className = 'link-button film-cards-container__link-button'
+    seeFavoritesButton.className = 'link-button film-cards-container__link-button';
     seeFavoritesButton.textContent = FilmsView.#Text.SeeFavoriteFilms;
 
     container.append(seeFavoritesButton);

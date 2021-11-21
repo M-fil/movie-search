@@ -28,7 +28,7 @@ export class FavoritesView extends View {
   }
 
   update(favoriteFilmModels) {
-    this.#renderFilms(favoriteFilmModels)
+    this.#renderFilms(favoriteFilmModels);
   }
 
   render(favoriteFilmModels = []) {
@@ -49,7 +49,7 @@ export class FavoritesView extends View {
 
     this.#filmsContainer = document.createElement('div');
     this.#filmsContainer.className = 'film-cards-container';
-    this.#renderFilms(favoriteFilmModels)
+    this.#renderFilms(favoriteFilmModels);
 
     container.append(titleHTML, linksBlock, this.#filmsContainer);
 
